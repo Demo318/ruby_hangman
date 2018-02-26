@@ -1,6 +1,3 @@
-# Class variables have @@ (works for all superclasses & subclasses)
-# Instance variables have @
-
 ##
 # This class contains all the logic for interacting with words to be served to the player.
 
@@ -58,10 +55,3 @@ class WordsList
     end
 
 end
-
-test = WordsList.new("../5desk.txt")
-puts "test 1"
-puts test.current_word
-test.new_word
-puts "test 2"
-puts test.current_word
