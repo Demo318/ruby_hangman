@@ -15,7 +15,7 @@ class Hangman
     def initialize(word_file)
         # If @games_hash file exists, load it & ask player if they want to load a game. Else, Hash.new & start new game.
         # TODO: Use @special_commands as master reference to, uh, special commands.
-        @special_commands = ["save", "exit", "new"]
+        @special_commands = {"save"=>:save_game, "exit"=>:exit_game, "new"=>:new_game}
         @word_file = word_file
         @save_file_name = "lib/saved_games.yaml"
         if File.exist?(@save_file_name)
@@ -48,21 +48,19 @@ class Hangman
         while selection == ""
             try_selection = gets.chomp
 
-            if try_selection.downcase == "new"
+            if  @special_commands.keys.include?(try_selection.downcase)
                 selection = try_selection.downcase
-            elsif try_selection.downcase == "exit"
-                exit_game
             elsif downcase_games.include?(try_selection.downcase)
                 available_games.each do |game|
                     selection = game if game.downcase == try_selection.downcase
                 end
             else
-                puts "That name is not valid, please enter another."
+                puts "That entry is not valid, please enter another."
             end
         end
 
-        if selection == "new"
-            new_game
+        if @special_commands.keys.include?(selection)
+            self.send(@special_commands[selection])
         else
             @game_name = selection
         end
@@ -96,10 +94,10 @@ class Hangman
             try_entry = gets.chomp.downcase
 
             if try_entry.length != 1
-                case try_entry
-                    when @special_commands[0] then save_game
-                    when @special_commands[1] then exit_game
-                    else puts "That entry is not valid."
+                if try_entry == @special_commands.keys[0] || try_entry == @special_commands.keys[1]
+                    self.send(@special_commands[try_entry])
+                else 
+                    puts "That entry is not valid."
                 end
             elsif @games_hash[@game_name].current_guesses.include?(try_entry) 
                 puts "You've already entered that letter."
@@ -134,7 +132,8 @@ class Hangman
         puts "Please enter your name:"
 
         while this_player == ""
-            unless @games_hash.key?(player_entry) && @special_commands.include?(player_entry)
+            player_entry = gets
+            unless @games_hash.key?(player_entry) && @special_commands.keys.include?(player_entry)
                 this_player = player_entry
             end
         end
