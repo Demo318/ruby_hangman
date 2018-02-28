@@ -105,7 +105,6 @@ class Game
 
     def get_new_word
         # Updates the current word, current blanks, current_guesses and resets the misses counter.
-        
         @words_list.new_word
         @current_guesses = []
         refresh_current_blanks

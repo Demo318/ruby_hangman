@@ -99,6 +99,8 @@ class Hangman
                 else 
                     puts "That entry is not valid."
                 end
+            elsif /\d|_|\W|\s/.match(try_entry)
+                puts "Please enter only alphabetical characters."
             elsif @games_hash[@game_name].current_guesses.include?(try_entry) 
                 puts "You've already entered that letter."
             elsif try_entry.length == 1
