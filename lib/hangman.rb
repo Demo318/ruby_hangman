@@ -47,8 +47,11 @@ class Hangman
         selection = ""
         while selection == ""
             try_selection = gets.chomp
+
             if try_selection.downcase == "new"
                 selection = try_selection.downcase
+            elsif try_selection.downcase == "exit"
+                exit_game
             elsif downcase_games.include?(try_selection.downcase)
                 available_games.each do |game|
                     selection = game if game.downcase == try_selection.downcase
@@ -114,6 +117,7 @@ class Hangman
         # Automatically executes if no saved games file is found.
         @game_name = get_player_name
         @games_hash[@game_name] = Game.new(@word_file)
+        save_game
     end
 
     def save_game
@@ -130,7 +134,6 @@ class Hangman
         puts "Please enter your name:"
 
         while this_player == ""
-            player_entry = gets.chomp
             unless @games_hash.key?(player_entry) && @special_commands.include?(player_entry)
                 this_player = player_entry
             end
